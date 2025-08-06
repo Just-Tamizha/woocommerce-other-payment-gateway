@@ -10,6 +10,7 @@ class WC_Other_Payment_Gateway extends WC_Payment_Gateway{
 	public function __construct(){
 		$this->id = 'other_payment';
 		$this->method_title = __('Custom Payment','woocommerce-other-payment-gateway');
+		$this->icon = apply_filters( 'woocommerce-other-payment-gateway', plugins_url('/assets/icon.png', __FILE__ ) );
 		$this->title = __('Custom Payment','woocommerce-other-payment-gateway');
 		$this->has_fields = true;
 		$this->init_form_fields();
@@ -20,6 +21,8 @@ class WC_Other_Payment_Gateway extends WC_Payment_Gateway{
 		$this->hide_text_box = $this->get_option('hide_text_box');
 		$this->text_box_required = $this->get_option('text_box_required');
 		$this->order_status = $this->get_option('order_status');
+		$this->name = $this->get_option('name');
+		$this->UPI = $this->get_option('UPI');
 
 
 		add_action('woocommerce_update_options_payment_gateways_'.$this->id, array($this, 'process_admin_options'));
@@ -31,7 +34,7 @@ class WC_Other_Payment_Gateway extends WC_Payment_Gateway{
 					'title' 		=> __( 'Enable/Disable', 'woocommerce-other-payment-gateway' ),
 					'type' 			=> 'checkbox',
 					'label' 		=> __( 'Enable Custom Payment', 'woocommerce-other-payment-gateway' ),
-					'default' 		=> 'yes'
+					'default' 		=> 'no'
 					),
 
 		            'title' => array(
@@ -39,6 +42,20 @@ class WC_Other_Payment_Gateway extends WC_Payment_Gateway{
 						'type' 			=> 'text',
 						'description' 	=> __( 'This controls the title', 'woocommerce-other-payment-gateway' ),
 						'default'		=> __( 'Custom Payment', 'woocommerce-other-payment-gateway' ),
+						'desc_tip'		=> true,
+					),
+					'name' => array(
+						'title' 		=> __( 'Name', 'woocommerce-other-payment-gateway' ),
+						'type' 			=> 'text',
+						'description' 	=> __( 'Show your name in barcode', 'woocommerce-other-payment-gateway' ),
+						'default'		=> __( '', 'woocommerce-other-payment-gateway' ),
+						'desc_tip'		=> true,
+					),
+					'UPI' => array(
+						'title' 		=> __( 'UPI', 'woocommerce-other-payment-gateway' ),
+						'type' 			=> 'text',
+						'description' 	=> __( 'UPI ID - Google Pay..etc', 'woocommerce-other-payment-gateway' ),
+						'default'		=> __( '', 'woocommerce-other-payment-gateway' ),
 						'desc_tip'		=> true,
 					),
 					'description' => array(
@@ -77,99 +94,6 @@ class WC_Other_Payment_Gateway extends WC_Payment_Gateway{
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function admin_options() {
-		?>
-		<h3><?php _e( 'Custom Payment Settings', 'woocommerce-other-payment-gateway' ); ?></h3>
-			<div id="poststuff">
-				<div id="post-body" class="metabox-holder columns-2">
-					<div id="post-body-content">
-						<table class="form-table">
-							<?php $this->generate_settings_html();?>
-						</table><!--/.form-table-->
-					</div>
-					<div id="postbox-container-1" class="postbox-container">
-	                        <div id="side-sortables" class="meta-box-sortables ui-sortable">
-
-     							<div class="postbox ">
-	                                <h3 class="hndle"><span><i class="dashicons dashicons-update"></i>&nbsp;&nbsp;Upgrade to Pro</span></h3>
-                                    <hr>
-	                                <div class="inside">
-	                                    <div class="support-widget">
-	                                        <ul>
-	                                            <li>» Full Form Builder</li>
-	                                            <li>» Create Unlimited Custom Gateways</li>
-	                                            <li>» Custom Gateway Icon</li>
-	                                            <li>» Order Status After Checkout</li>
-	                                            <li>» Custom API Requests</li>
-	                                            <li>» Payment Information in Order’s Email</li>
-	                                            <li>» Debugging Mode</li>
-	                                            <li>» Auto Hassle-Free Updates</li>
-	                                            <li>» High Priority Customer Support</li>
-	                                        </ul>
-											<a href="https://wpruby.com/plugin/woocommerce-custom-payment-gateway-pro/?utm_source=custom-payment-lite&utm_medium=widget&utm_campaign=freetopro" class="button wpruby_button" target="_blank"><span class="dashicons dashicons-star-filled"></span> Upgrade Now</a>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                            <div class="postbox ">
-	                                <h3 class="hndle"><span><i class="dashicons dashicons-editor-help"></i>&nbsp;&nbsp;Plugin Support</span></h3>
-                                    <hr>
-	                                <div class="inside">
-	                                    <div class="support-widget">
-	                                        <p>
-	                                        <img style="width: 70%;margin: 0 auto;position: relative;display: inherit;" src="https://wpruby.com/wp-content/uploads/2016/03/wpruby_logo_with_ruby_color-300x88.png">
-	                                        <br/>
-	                                        Got a Question, Idea, Problem or Praise?</p>
-	                                        <ul>
-												<li>» Please leave us a <a target="_blank" href="https://wordpress.org/support/view/plugin-reviews/woocommerce-other-payment-gateway?filter=5#postform">★★★★★</a> rating.</li>
-	                                            <li>» <a href="https://wpruby.com/submit-ticket/" target="_blank">Support Request</a></li>
-	                                            <li>» <a href="https://wpruby.com/knowledgebase_category/woocommerce-custom-payment-gateway-pro/" target="_blank">Documentation and Common issues.</a></li>
-	                                            <li>» <a href="https://wpruby.com/plugins/" target="_blank">Our Plugins Shop</a></li>
-	                                        </ul>
-
-	                                    </div>
-	                                </div>
-	                            </div>
-
-	                            <div class="postbox rss-postbox">
-	    								<h3 class="hndle"><span><i class="fa fa-wordpress"></i>&nbsp;&nbsp;WPRuby Blog</span></h3>
-                                        <hr>
-	    								<div class="inside">
-											<div class="rss-widget">
-												<?php
-	    											wp_widget_rss_output(array(
-	    													'url' => 'https://wpruby.com/feed/',
-	    													'title' => 'WPRuby Blog',
-	    													'items' => 3,
-	    													'show_summary' => 0,
-	    													'show_author' => 0,
-	    													'show_date' => 1,
-	    											));
-	    										?>
-	    									</div>
-	    								</div>
-	    						</div>
-
-	                        </div>
-	                    </div>
-                    </div>
-				</div>
-				<div class="clear"></div>
-				<style type="text/css">
-				.wpruby_button{
-					background-color:#4CAF50 !important;
-					border-color:#4CAF50 !important;
-					color:#ffffff !important;
-					width:100%;
-					text-align:center;
-					height:35px !important;
-					font-size:12pt !important;
-				}
-                .wpruby_button .dashicons {
-                    padding-top: 5px;
-                }
-				</style>
-				<?php
-	}
 
 	public function validate_fields() {
 	    if ($this->text_box_required === 'no') {
@@ -183,7 +107,7 @@ class WC_Other_Payment_Gateway extends WC_Payment_Gateway{
 	    $textbox_value = (isset($_POST['other_payment-admin-note']))? trim($_POST['other_payment-admin-note']): '';
 
 		if ($textbox_value === '') {
-			wc_add_notice( __('Please, complete the payment information.','woocommerce-custom-payment-gateway'), 'error');
+			wc_add_notice( __('Update Transection or Reference ID','woocommerce-custom-payment-gateway'), 'error');
 			return false;
         }
 
@@ -213,9 +137,77 @@ class WC_Other_Payment_Gateway extends WC_Payment_Gateway{
 	    ?>
 		<fieldset>
 			<p class="form-row form-row-wide">
-                <label for="<?php echo $this->id; ?>-admin-note"><?php echo ($this->description); ?> <?php if($this->text_box_required === 'yes'): ?> <span class="required">*</span> <?php endif; ?></label>
-                <?php if($this->hide_text_box !== 'yes'){ ?>
-				    <textarea id="<?php echo $this->id; ?>-admin-note" class="input-text" type="text" name="<?php echo $this->id; ?>-admin-note"></textarea>
+				<label for="<?php echo $this->id; ?>-admin-note"><?php echo ($this->description); ?> <?php if($this->text_box_required === 'yes'): ?> <span class="required"></span> <?php endif; ?></label>
+				<?php
+				if ($this->hide_text_box !== 'yes') {
+					$order_total = ( is_object( WC()->cart ) && method_exists( WC()->cart, 'get_total' ) ) ? WC()->cart->get_total('edit') : '';
+					if ($order_total) {
+						$order_total_numeric = floatval(preg_replace('/[^\d.]/', '', $order_total));
+						$upi_id = $this->UPI; 
+						$upi_name = $this->name;
+						$transaction_note = 'store.pingtamizha.com'; // You can customize or fetch this as needed
+						$upi_uri = 'upi://pay?pa=' . urlencode($upi_id)
+							. '&pn=' . urlencode($upi_name)
+							. '&am=' . urlencode($order_total_numeric)
+							. '&cu=INR'
+							. '&tn=' . urlencode($transaction_note);
+						?>
+						<div style="margin:10px 0;">
+						<?php if ( !empty($upi_uri) ) : ?>
+							
+							<div style="margin-bottom:10px; text-align:center;">
+								<span id="custom_upi_id" style="font-family:monospace;"><?php echo esc_html($upi_id); ?></span>
+								<button type="button" onclick="copyUPI()" style="margin-left:8px; padding:2px 8px; font-size:12px; cursor:pointer;">Copy</button>
+							</div>
+							<script type="text/javascript">
+							function copyUPI() {
+								var upiText = document.getElementById('custom_upi_id').innerText;
+								if (navigator.clipboard) {
+									navigator.clipboard.writeText(upiText).catch(function() {
+										alert('Failed to copy UPI ID.');
+									});
+								} else {
+									// fallback for older browsers
+									var tempInput = document.createElement('input');
+									tempInput.value = upiText;
+									document.body.appendChild(tempInput);
+									tempInput.select();
+									try {
+										document.execCommand('copy');
+									} catch (err) {
+										alert('Failed to copy UPI ID.');
+									}
+									document.body.removeChild(tempInput);
+								}
+							}
+							</script>
+
+							<div id="custom_qrcode" style="display: flex; justify-content: center; align-items: center;"></div>
+							<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+							<script type="text/javascript">
+								var qrcodeContainer = document.getElementById("custom_qrcode");
+								if (qrcodeContainer) {
+									qrcodeContainer.innerHTML = "";
+									new QRCode(qrcodeContainer, {
+										text: "<?php echo esc_js($upi_uri); ?>",
+										width: 150,
+										height: 150
+									});
+								}
+							</script>
+						<?php endif; ?>
+						<?php
+					}
+				}
+				?>
+				<?php if($this->hide_text_box !== 'yes'){ ?>
+					<br>
+					<label for="<?php echo $this->id; ?>-admin-note">
+						<strong><?php _e('Transaction or Reference ID', 'woocommerce-other-payment-gateway'); ?></strong>
+						<!-- <span class="required" style="color: #d00;">*</span> -->
+						<?php if($this->text_box_required === 'yes'): ?> <span class="required" style="color: #d00;">*</span> <?php endif; ?>
+					</label>
+					<input id="<?php echo $this->id; ?>-admin-note" class="input-text" type="text" name="<?php echo $this->id; ?>-admin-note" />
                 <?php } ?>
 			</p>
 			<div class="clear"></div>

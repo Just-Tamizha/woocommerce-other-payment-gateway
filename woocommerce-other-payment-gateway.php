@@ -1,14 +1,14 @@
 <?php
 /* @wordpress-plugin
- * Plugin Name:       WooCommerce Custom Payment Gateway
- * Plugin URI:        https://wpruby.com/plugin/woocommerce-custom-payment-gateway-pro/
+ * Plugin Name:       PingTamizha Custom Payment Gateway
+ * Plugin URI:        https://pingtamizha.com/
  * Description:       Design your own payment gateway by drag and drop.
  * Version:           1.4.0
  * WC requires at least: 3.0
  * WC tested up to: 9.4
  * Requires Plugins: woocommerce
- * Author:            WPRuby
- * Author URI:        https://wpruby.com
+ * Author:            Tamizha
+ * Author URI:        https://pingtamizha.com/
  * Text Domain:       woocommerce-other-payment-gateway
  * Domain Path: /languages
  * License:           GPL-2.0+
