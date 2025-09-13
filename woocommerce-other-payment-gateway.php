@@ -3,9 +3,9 @@
  * Plugin Name:       PingTamizha Custom Payment Gateway
  * Plugin URI:        https://pingtamizha.com/
  * Description:       Design your own payment gateway by drag and drop.
- * Version:           1.4.0
+ * Version:           1.4.1
  * WC requires at least: 3.0
- * WC tested up to: 9.4
+ * WC tested up to: 10.1
  * Requires Plugins: woocommerce
  * Author:            Tamizha
  * Author URI:        https://pingtamizha.com/
